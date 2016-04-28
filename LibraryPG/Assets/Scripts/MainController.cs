@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class MainController : MonoBehaviour
 {
@@ -21,23 +22,32 @@ public class MainController : MonoBehaviour
     }
     #endregion
 
-    private List<Location> locations;
-    private Location currentLocation;
+    public Location currentLocation;
 
+    public List<Location> locations;
     public GameObject arrowPrefab;
     public GameObject arrows;
+
+    public float arrowDistance = 100;
 
     public void ChangeLocation(Location location)
     {
         currentLocation = location;
         RenderSettings.skybox = currentLocation.skybox;
+        LoadNeighbours(location);
+    }
+
+    public void Start()
+    {
+        ChangeLocation(currentLocation);
     }
 
     void LoadNeighbours(Location location)
     {
+        if (arrows == null) return;
         foreach (Transform arrow in arrows.transform)
         {
-            Destroy(arrow);
+            Destroy(arrow.gameObject);
         }
         foreach (Neighbour neighbour in location.neighbours)
         {
@@ -45,16 +55,15 @@ public class MainController : MonoBehaviour
 
             go.transform.parent = arrows.transform;
 
-            Neighbour goNeigbour = go.GetComponent<Neighbour>();
-
-            goNeigbour.location = neighbour.location;
-            goNeigbour.direction = neighbour.direction;
-
-            go.transform.position = Vector3.Normalize(goNeigbour.direction);
+            go.transform.position = Vector3.Normalize(neighbour.direction)* arrowDistance;
             go.transform.LookAt(new Vector3(0, transform.position.y, 0));
+
+            var button = go.GetComponent<Button>();
+            button.onClick.AddListener(delegate () { neighbour.GoTo(); });
 
         }
     }
+
 
 
 }
