@@ -3,9 +3,9 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+
 public class MainController : MonoBehaviour
 {
-
     #region Singleton patter
     private static MainController instance = null;
 
@@ -19,10 +19,12 @@ public class MainController : MonoBehaviour
     #endregion
 
     public Location currentLocation;
-
+    
     public List<Location> locations;
     public GameObject arrowPrefab;
+
     public RectTransform arrows;
+    public RectTransform map;
 
     public float arrowDistance = 100;
 
