@@ -4,7 +4,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class BlockMouse : MonoBehaviour
 {
-    public FirstPersonController controller;    // Use this for initialization
+    private FirstPersonController controller;    // Use this for initialization
     void Start ()
     {
         controller = GetComponent<FirstPersonController>();

@@ -41,6 +41,11 @@ public class MainController : MonoBehaviour
         ChangeLocation(currentLocation);
     }
 
+    void SetupMap()
+    {
+        
+    }
+
     void SetNeighbours(Location location)
     {
         DestroyNeighbours(location);
