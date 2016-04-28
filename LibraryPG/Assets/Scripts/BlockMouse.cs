@@ -7,19 +7,25 @@ public class BlockMouse : MonoBehaviour
 {
     private FirstPersonController controller;
     public bool isOver = false;
-
+    public GameObject arrow;
     void Start ()
     {
         controller = GetComponent<FirstPersonController>();
     }
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButton(0))
-        {
-            if (isOver = false)
-                Screen.lockCursor = true;
-            else
-                Screen.lockCursor = false;
+	    if (Input.GetMouseButton(0))
+	    {
+	        if (isOver = false)
+        {   
+	        Screen.lockCursor = true;
+	    }
+	    else
+	    {
+	        Screen.lockCursor = false;
+
+        }
+
             controller.m_MouseLook.XSensitivity = 2f;
             controller.m_MouseLook.YSensitivity = 2f;
         }
@@ -34,6 +40,8 @@ public class BlockMouse : MonoBehaviour
     public void OnPointerEnter()
     {
         Debug.Log("Mouse enter");
+        arrow = GameObject.FindGameObjectWithTag("ArrowTag");
+        arrow.SetActive(true);
         isOver = true;
     }
 
@@ -41,5 +49,7 @@ public class BlockMouse : MonoBehaviour
     {
         Debug.Log("Mouse exit");
         isOver = false;
+        arrow.SetActive(false);
+
     }
 }
