@@ -37,6 +37,9 @@ public class MainController : MonoBehaviour
 
     public void ChangeLocation(Location location)
     {
+        placemarks[currentLocation.name].image.color = Color.green;
+        placemarks[location.name].image.color = Color.red;
+
         currentLocation = location;
         RenderSettings.skybox = currentLocation.skybox;
         SetNeighbours(location);
@@ -45,13 +48,15 @@ public class MainController : MonoBehaviour
     public void Start()
     {
         instance = this;
-        ChangeLocation(currentLocation);
         SetupMap();
+        ChangeLocation(currentLocation);
     }
 
     void SetupMap()
     {
         if (map == null) return;
+
+        placemarks=new Dictionary<string, Button>();
 
         foreach (Location location in locations)
         {
@@ -61,10 +66,16 @@ public class MainController : MonoBehaviour
             go.transform.localPosition = new Vector3((location.positionOnMap.x - 0.5f )*map.rect.width,
                                                     (location.positionOnMap.y - 0.5f) *map.rect.height,
                                                     0);
-            placemarks.Add(location.name, go.GetComponent<Button>());
+            Button button = go.GetComponent<Button>();
+            button.image.color= Color.green;
+            placemarks.Add(location.name, button);
+
             //Debug.Log("Placmark_" + location.name+" "+ map.rect.width+" "+ map.rect.height);
+            string tmp = location.name;
+            button.onClick.AddListener(delegate () { this.MapJump(tmp); });
 
         }
+        placemarks[currentLocation.name].image.color = Color.red;
     }
 
     void SetNeighbours(Location location)
@@ -82,6 +93,7 @@ public class MainController : MonoBehaviour
             Destroy(arrow.gameObject);
         }
     }
+
     void LoadNeighbours(Location location)
     {
 
@@ -96,8 +108,39 @@ public class MainController : MonoBehaviour
             go.transform.LookAt(new Vector3(0, transform.position.y, 0));
 
             var button = go.GetComponent<Button>();
+            
             button.onClick.AddListener(delegate () { neighbour.GoTo(); });
 
+        }
+    }
+
+    public void MapJump(string name)
+    {
+        foreach (var location in locations)
+        {
+            if (location.name == name)
+            {
+                ChangeLocation(location);
+                return;
+            }
+        }
+        
+    }
+
+    public void ChangeView()
+    {
+
+        if (!mapOn)
+        {
+            arrows.gameObject.SetActive(false);
+            map.gameObject.SetActive(true);
+            mapOn = true;
+        }
+        else if (mapOn)
+        {
+            arrows.gameObject.SetActive(true);
+            map.gameObject.SetActive(false);
+            mapOn = false;
         }
     }
 
