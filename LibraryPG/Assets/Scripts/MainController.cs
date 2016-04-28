@@ -33,8 +33,6 @@ public class MainController : MonoBehaviour
 
     private bool mapOn=false;
 
-    public float arrowDistance = 100;
-
     public void ChangeLocation(Location location)
     {
         placemarks[currentLocation.name].image.color = Color.green;
@@ -47,6 +45,7 @@ public class MainController : MonoBehaviour
 
     public void Start()
     {
+
         instance = this;
         SetupMap();
         ChangeLocation(currentLocation);
@@ -104,14 +103,20 @@ public class MainController : MonoBehaviour
 
             go.transform.parent = arrows;
 
-            go.transform.position = Vector3.Normalize(neighbour.direction)* arrowDistance;
+            go.transform.transform.RotateAround(Vector3.zero, Vector3.up, neighbour.direction);
             go.transform.LookAt(new Vector3(0, transform.position.y, 0));
 
             var button = go.GetComponent<Button>();
-            
-            button.onClick.AddListener(delegate () { neighbour.GoTo(); });
+
+            Location temp = neighbour.location;
+            button.onClick.AddListener(delegate () { this.GoTo(temp); });
 
         }
+    }
+
+    public void GoTo(Location location)
+    {
+        MainController.GetInstance().ChangeLocation(location);
     }
 
     public void MapJump(string name)

@@ -19,10 +19,7 @@ public class Location : MonoBehaviour
 public class Neighbour 
 {
     public Location location;
-    public Vector3 direction;
+    public float direction;
 
-    public void GoTo()
-    {
-        MainController.GetInstance().ChangeLocation(location);
-    }
+    
 }
