@@ -1,16 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ChangeStateOfButtons : MonoBehaviour
 {
 
     private bool isOver ;
     public GameObject childText;
+    public Text text;
    
 	void Start ()
 	{
-
-    }
+	    text = childText.GetComponent<Text>();
+	}
     void Update ()
     {
         Debug.Log(isOver);
@@ -19,12 +21,12 @@ public class ChangeStateOfButtons : MonoBehaviour
     public void OnPointerEnter()
     {
         isOver = true;
-     //   childText.SetActive(true);
+        //text.enabled = !text.enabled;
     }
 
     public void OnPointerExit()
     {
         isOver = false;
-      //  childText.SetActive(false);
+        //text.enabled = !text.enabled;
     }
 }
