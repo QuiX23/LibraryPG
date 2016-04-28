@@ -39,17 +39,11 @@ public class BlockMouse : MonoBehaviour
 
     public void OnPointerEnter()
     {
-        Debug.Log("Mouse enter");
-        arrow = GameObject.FindGameObjectWithTag("ArrowTag");
-        arrow.SetActive(true);
         isOver = true;
     }
 
     public void OnPointerExit()
     {
-        Debug.Log("Mouse exit");
         isOver = false;
-        arrow.SetActive(false);
-
     }
 }
