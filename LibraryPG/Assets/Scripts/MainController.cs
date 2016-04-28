@@ -35,8 +35,14 @@ public class MainController : MonoBehaviour
 
     public void ChangeLocation(Location location)
     {
-        placemarks[currentLocation.name].image.color = Color.green;
-        placemarks[location.name].image.color = Color.red;
+        ColorBlock cb = placemarks[currentLocation.name].colors;
+        cb.normalColor = Color.white;
+        placemarks[currentLocation.name].colors = cb;
+
+        cb = placemarks[location.name].colors;
+        cb.normalColor = Color.green;
+        placemarks[location.name].colors = cb;
+        placemarks[location.name].Select();
 
         currentLocation = location;
         RenderSettings.skybox = currentLocation.skybox;
@@ -66,7 +72,11 @@ public class MainController : MonoBehaviour
                                                     (location.positionOnMap.y - 0.5f) *map.rect.height,
                                                     0);
             Button button = go.GetComponent<Button>();
-            button.image.color= Color.green;
+
+            ColorBlock cb1 = button.colors;
+            cb1.normalColor = Color.white;
+            button.colors = cb1;
+
             placemarks.Add(location.name, button);
 
             //Debug.Log("Placmark_" + location.name+" "+ map.rect.width+" "+ map.rect.height);
@@ -74,7 +84,11 @@ public class MainController : MonoBehaviour
             button.onClick.AddListener(delegate () { this.MapJump(tmp); });
 
         }
-        placemarks[currentLocation.name].image.color = Color.red;
+
+        ColorBlock cb2 = placemarks[currentLocation.name].colors;
+        cb2.normalColor = Color.green;
+        placemarks[currentLocation.name].colors = cb2;
+        placemarks[currentLocation.name].Select();
     }
 
     void SetNeighbours(Location location)
@@ -116,7 +130,7 @@ public class MainController : MonoBehaviour
 
     public void GoTo(Location location)
     {
-        MainController.GetInstance().ChangeLocation(location);
+       GetInstance().ChangeLocation(location);
     }
 
     public void MapJump(string name)
@@ -129,7 +143,7 @@ public class MainController : MonoBehaviour
                 return;
             }
         }
-        
+   
     }
 
     public void ChangeView()
