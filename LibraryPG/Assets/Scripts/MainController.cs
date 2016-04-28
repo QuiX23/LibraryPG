@@ -25,8 +25,9 @@ public class MainController : MonoBehaviour
     private Location currentLocation;
 
     public GameObject arrowPrefab;
+    public GameObject arrows;
 
-    void ChangeLocation(Location location)
+    public void ChangeLocation(Location location)
     {
         currentLocation = location;
         RenderSettings.skybox = currentLocation.skybox;
@@ -34,8 +35,23 @@ public class MainController : MonoBehaviour
 
     void LoadNeighbours(Location location)
     {
+        foreach (Transform arrow in arrows.transform)
+        {
+            Destroy(arrow);
+        }
         foreach (Neighbour neighbour in location.neighbours)
         {
+            GameObject go = Instantiate(arrowPrefab);
+
+            go.transform.parent = arrows.transform;
+
+            Neighbour goNeigbour = go.GetComponent<Neighbour>();
+
+            goNeigbour.location = neighbour.location;
+            goNeigbour.direction = neighbour.direction;
+
+            go.transform.position = Vector3.Normalize(goNeigbour.direction);
+            go.transform.LookAt(new Vector3(0, transform.position.y, 0));
 
         }
     }
