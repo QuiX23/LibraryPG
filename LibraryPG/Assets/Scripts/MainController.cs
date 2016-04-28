@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -21,10 +22,16 @@ public class MainController : MonoBehaviour
     public Location currentLocation;
     
     public List<Location> locations;
+
     public GameObject arrowPrefab;
+    public GameObject placemarkPrefab;
+
+    public Dictionary <string ,Button> placemarks;
 
     public RectTransform arrows;
     public RectTransform map;
+
+    private bool mapOn=false;
 
     public float arrowDistance = 100;
 
@@ -39,23 +46,37 @@ public class MainController : MonoBehaviour
     {
         instance = this;
         ChangeLocation(currentLocation);
+        SetupMap();
     }
 
     void SetupMap()
     {
-        
+        if (map == null) return;
+
+        foreach (Location location in locations)
+        {
+            GameObject go = Instantiate(placemarkPrefab);
+            go.name = "Placmark_" + location.name;
+            go.transform.parent = map;
+            go.transform.localPosition = new Vector3((location.positionOnMap.x - 0.5f )*map.rect.width,
+                                                    (location.positionOnMap.y - 0.5f) *map.rect.height,
+                                                    0);
+            placemarks.Add(location.name, go.GetComponent<Button>());
+            //Debug.Log("Placmark_" + location.name+" "+ map.rect.width+" "+ map.rect.height);
+
+        }
     }
 
     void SetNeighbours(Location location)
     {
+        if (arrows == null) return;
+
         DestroyNeighbours(location);
         LoadNeighbours(location);
     }
 
     void DestroyNeighbours(Location location)
     {
-        if (arrows == null) return;
-
         foreach (RectTransform arrow in arrows)
         {
             Destroy(arrow.gameObject);
@@ -67,6 +88,7 @@ public class MainController : MonoBehaviour
         foreach (Neighbour neighbour in location.neighbours)
         {
             GameObject go = Instantiate(arrowPrefab);
+            go.name = "Arrow_" + neighbour.location.name;
 
             go.transform.parent = arrows;
 
