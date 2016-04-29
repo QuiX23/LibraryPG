@@ -5,28 +5,39 @@ using UnityEngine.UI;
 public class ChangeStateOfButtons : MonoBehaviour
 {
 
-    private bool isOver ;
-    public GameObject childText;
+    private bool isOver=false ;
     public Text text;
-   
+    private BlockMouse blockMouse;
 	void Start ()
 	{
-	    text = childText.GetComponent<Text>();
+	    blockMouse = Object.FindObjectOfType<BlockMouse>();
 	}
     void Update ()
     {
-        Debug.Log(isOver);
+        
+        //Debug.Log(isOver);
+        if (isOver)
+        {
+            text.enabled = true;
+
+        }
+        else
+        {
+            text.enabled = false;
+        }
     }
 
-    public void OnPointerEnter()
+    public void OnPointerEnterZ()
     {
         isOver = true;
-        //text.enabled = !text.enabled;
+       // blockMouse.isOver = true;
+        //blockMouse.isOver = true;
     }
 
-    public void OnPointerExit()
+    public void OnPointerExitZ()
     {
         isOver = false;
-        //text.enabled = !text.enabled;
+       // blockMouse.isOver = false;
+        //blockMouse.isOver = false;
     }
 }

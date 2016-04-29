@@ -79,6 +79,10 @@ public class MainController : MonoBehaviour
 
             placemarks.Add(location.name, button);
 
+            Text text = go.GetComponentInChildren<Text>();
+            if (text!=null)
+            text.text = location.name;
+
             //Debug.Log("Placmark_" + location.name+" "+ map.rect.width+" "+ map.rect.height);
             string tmp = location.name;
             button.onClick.AddListener(delegate () { this.MapJump(tmp); });
@@ -89,6 +93,7 @@ public class MainController : MonoBehaviour
         cb2.normalColor = Color.green;
         placemarks[currentLocation.name].colors = cb2;
         placemarks[currentLocation.name].Select();
+        map.gameObject.SetActive(false);
     }
 
     void SetNeighbours(Location location)
@@ -119,18 +124,50 @@ public class MainController : MonoBehaviour
 
             go.transform.transform.RotateAround(Vector3.zero, Vector3.up, neighbour.direction);
             go.transform.LookAt(new Vector3(0, transform.position.y, 0));
+            go.transform.transform.RotateAround(go.transform.position, Vector3.up, 180);
 
             var button = go.GetComponent<Button>();
 
             Location temp = neighbour.location;
-            button.onClick.AddListener(delegate () { this.GoTo(temp); });
 
+            bool temp2 = false;
+            if (!arrows.gameObject.activeSelf)
+            {
+                temp2 = true;
+                arrows.gameObject.SetActive(true);
+            }
+
+            arrows.gameObject.SetActive(true);
+            Text text = go.GetComponentInChildren<Text>();
+            if (text != null)
+                text.text = neighbour.location.name;
+
+
+            if (temp2)
+            {
+                arrows.gameObject.SetActive(false);
+            }
+
+
+            //Debug.Log("Added listeners");
+            button.onClick.AddListener(delegate () { GoTo(temp); });
+         
         }
     }
 
     public void GoTo(Location location)
     {
        GetInstance().ChangeLocation(location);
+    }
+
+    public void ShowText(Text text)
+    {
+        text.gameObject.SetActive(true);
+    }
+
+    public void HideText(Text text)
+    {
+        text.gameObject.SetActive(false);
     }
 
     public void MapJump(string name)
