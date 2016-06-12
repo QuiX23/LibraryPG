@@ -14,23 +14,12 @@ public class ChangeStateOfButtons : MonoBehaviour
 	}
     void Update ()
     {
-        
-        //Debug.Log(isOver);
-        if (isOver)
-        {
-            text.enabled = true;
-
-        }
-        else
-        {
-            text.enabled = false;
-        }
+        text.enabled = isOver;
     }
 
     public void OnPointerEnterZ()
     {
         isOver = true;
-       // blockMouse.isOver = true;
         //blockMouse.isOver = true;
     }
 
@@ -38,6 +27,5 @@ public class ChangeStateOfButtons : MonoBehaviour
     {
         isOver = false;
        // blockMouse.isOver = false;
-        //blockMouse.isOver = false;
     }
 }

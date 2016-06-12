@@ -12,7 +12,8 @@ public class Location : MonoBehaviour
     public List<Neighbour> neighbours;
     public Vector2 positionOnMap;
     public Material skybox;
-    
+    public Sprite InfoSprite;
+
 }
 
 [System.Serializable]

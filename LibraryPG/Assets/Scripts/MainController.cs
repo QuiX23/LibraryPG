@@ -28,10 +28,14 @@ public class MainController : MonoBehaviour
 
     public Dictionary <string ,Button> placemarks;
 
+    public GameObject infoGO;
+
     public RectTransform arrows;
     public RectTransform map;
+    public RectTransform info;
 
     private bool mapOn=false;
+    private bool infoOn = false;
 
     public void ChangeLocation(Location location)
     {
@@ -47,6 +51,9 @@ public class MainController : MonoBehaviour
         currentLocation = location;
         RenderSettings.skybox = currentLocation.skybox;
         SetNeighbours(location);
+
+        if (mapOn)ChangeView();
+        ChangeInfo();
     }
 
     public void Start()
@@ -63,8 +70,10 @@ public class MainController : MonoBehaviour
 
         placemarks=new Dictionary<string, Button>();
 
+
         foreach (Location location in locations)
         {
+            map.gameObject.SetActive(true);
             GameObject go = Instantiate(placemarkPrefab);
             go.name = "Placmark_" + location.name;
             go.transform.parent = map;
@@ -117,7 +126,7 @@ public class MainController : MonoBehaviour
 
         foreach (Neighbour neighbour in location.neighbours)
         {
-            GameObject go = Instantiate(arrowPrefab);
+            var go = Instantiate(arrowPrefab);
             go.name = "Arrow_" + neighbour.location.name;
 
             go.transform.parent = arrows;
@@ -126,10 +135,6 @@ public class MainController : MonoBehaviour
             go.transform.LookAt(new Vector3(0, transform.position.y, 0));
             go.transform.transform.RotateAround(go.transform.position, Vector3.up, 180);
 
-            var button = go.GetComponent<Button>();
-
-            Location temp = neighbour.location;
-
             bool temp2 = false;
             if (!arrows.gameObject.activeSelf)
             {
@@ -137,8 +142,12 @@ public class MainController : MonoBehaviour
                 arrows.gameObject.SetActive(true);
             }
 
+            var button = go.GetComponentInChildren<Button>();
+
+            Location temp = neighbour.location;
+
             arrows.gameObject.SetActive(true);
-            Text text = go.GetComponentInChildren<Text>();
+            var text = go.GetComponentInChildren<Text>();
             if (text != null)
                 text.text = neighbour.location.name;
 
@@ -149,7 +158,6 @@ public class MainController : MonoBehaviour
             }
 
 
-            //Debug.Log("Added listeners");
             button.onClick.AddListener(delegate () { GoTo(temp); });
          
         }
@@ -157,7 +165,7 @@ public class MainController : MonoBehaviour
 
     public void GoTo(Location location)
     {
-       GetInstance().ChangeLocation(location);
+      ChangeLocation(location);
     }
 
     public void ShowText(Text text)
@@ -197,6 +205,27 @@ public class MainController : MonoBehaviour
             arrows.gameObject.SetActive(true);
             map.gameObject.SetActive(false);
             mapOn = false;
+        }
+    }
+
+
+    public void ChangeInfo()
+    {
+
+        if (!infoOn&& currentLocation.InfoSprite!=null)
+        {
+            arrows.gameObject.SetActive(false);
+            infoGO.SetActive(true);
+            infoOn = true;
+
+           var image= info.GetComponent<Image>();
+           image.sprite = currentLocation.InfoSprite;
+        }
+        else if (infoOn)
+        {
+            arrows.gameObject.SetActive(true);
+            infoGO.SetActive(false);
+            infoOn = false;
         }
     }
 
