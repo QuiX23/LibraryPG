@@ -40,14 +40,19 @@ public class MainController : MonoBehaviour
 
     public void ChangeLocation(Location location)
     {
-        ColorBlock cb = placemarks[currentLocation.name].colors;
-        cb.normalColor = Color.white;
-        placemarks[currentLocation.name].colors = cb;
-
-        cb = placemarks[location.name].colors;
-        cb.normalColor = Color.green;
-        placemarks[location.name].colors = cb;
-        placemarks[location.name].Select();
+        if (currentLocation.InfoSprite != null)
+        {
+            ColorBlock cb = placemarks[currentLocation.name].colors;
+            cb.normalColor = Color.white;
+            placemarks[currentLocation.name].colors = cb;
+        }
+        if (location.InfoSprite != null)
+        {
+            ColorBlock cb = placemarks[location.name].colors;
+            cb.normalColor = Color.green;
+            placemarks[location.name].colors = cb;
+            placemarks[location.name].Select();
+        }
 
         currentLocation = location;
         RenderSettings.skybox = currentLocation.skybox;
@@ -77,6 +82,8 @@ public class MainController : MonoBehaviour
 
         foreach (Location location in locations)
         {
+            if (location.InfoSprite == null) continue;
+            
             map.gameObject.SetActive(true);
             GameObject go = Instantiate(placemarkPrefab);
             go.name = "Placmark_" + location.name;
@@ -102,10 +109,13 @@ public class MainController : MonoBehaviour
 
         }
 
-        ColorBlock cb2 = placemarks[currentLocation.name].colors;
-        cb2.normalColor = Color.green;
-        placemarks[currentLocation.name].colors = cb2;
-        placemarks[currentLocation.name].Select();
+        if (currentLocation.InfoSprite != null)
+        {
+            ColorBlock cb2 = placemarks[currentLocation.name].colors;
+            cb2.normalColor = Color.green;
+            placemarks[currentLocation.name].colors = cb2;
+            placemarks[currentLocation.name].Select();
+        }
         map.gameObject.SetActive(false);
     }
 
