@@ -13,7 +13,7 @@ public class Location : MonoBehaviour
     public Vector2 positionOnMap;
     public Material skybox;
     public Sprite InfoSprite;
-
+    
 }
 
 [System.Serializable]
