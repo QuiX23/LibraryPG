@@ -2,6 +2,7 @@
 using UnityEngine;
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UI;
 
 
@@ -19,9 +20,7 @@ public class MainController : MonoBehaviour
 
     #endregion
 
-    public Location currentLocation;
-    
-    public List<Location> locations;
+    public GameObject locationsObject;
 
     public GameObject arrowPrefab;
     public GameObject placemarkPrefab;
@@ -36,6 +35,8 @@ public class MainController : MonoBehaviour
 
     private bool mapOn=false;
     private bool infoOn = false;
+    private Location currentLocation;
+    private List<Location> locations;
 
     public void ChangeLocation(Location location)
     {
@@ -58,8 +59,11 @@ public class MainController : MonoBehaviour
 
     public void Start()
     {
-
         instance = this;
+
+        locations =locationsObject.GetComponentsInChildren<Location>().ToList();
+        currentLocation = locations[0];
+
         SetupMap();
         ChangeLocation(currentLocation);
     }
