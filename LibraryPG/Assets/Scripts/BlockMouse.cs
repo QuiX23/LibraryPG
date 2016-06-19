@@ -15,18 +15,10 @@ public class BlockMouse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) &&
+            !MainController.GetInstance().InfoOn &&
+            !MainController.GetInstance().MapOn)
         {
-            if (!isOver)
-            {
-                //Screen.lockCursor = true;
-            }
-            else
-            {
-                //Screen.lockCursor = false;
-
-            }
-
             controller.m_MouseLook.XSensitivity = 2f;
             controller.m_MouseLook.YSensitivity = 2f;
         }
