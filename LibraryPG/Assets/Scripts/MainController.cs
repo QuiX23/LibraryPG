@@ -20,6 +20,9 @@ public class MainController : MonoBehaviour
 
     #endregion
 
+    [HideInInspector]
+    public Location currentLocation;
+
     public GameObject locationsObject;
 
     public GameObject arrowPrefab;
@@ -35,8 +38,24 @@ public class MainController : MonoBehaviour
 
     private bool mapOn=false;
     private bool infoOn = false;
-    private Location currentLocation;
+   
     private List<Location> locations;
+
+    public bool MapOn
+    {
+        get
+        {
+            return mapOn;
+        }
+    }
+
+    public bool InfoOn
+    {
+        get
+        {
+            return infoOn;
+        }
+    }
 
     public void ChangeLocation(Location location)
     {
@@ -44,7 +63,9 @@ public class MainController : MonoBehaviour
         {
             ColorBlock cb = placemarks[currentLocation.name].colors;
             cb.normalColor = Color.white;
-            placemarks[currentLocation.name].colors = cb;
+            var pGO = placemarks[currentLocation.name];
+            pGO.colors = cb;
+            pGO.GetComponentInChildren<ChangeStateOfButtons>().OnPointerExitZ();
         }
         if (location.InfoSprite != null)
         {
@@ -58,8 +79,8 @@ public class MainController : MonoBehaviour
         RenderSettings.skybox = currentLocation.skybox;
         SetNeighbours(location);
 
-        if (mapOn)ChangeView();
-        ChangeInfo();
+        if (MapOn)ChangeView();
+        ChangeInfo(true);
     }
 
     public void Start()
@@ -208,25 +229,27 @@ public class MainController : MonoBehaviour
     public void ChangeView()
     {
 
-        if (!mapOn)
+        if (!MapOn)
         {
             arrows.gameObject.SetActive(false);
             map.gameObject.SetActive(true);
             mapOn = true;
+            ChangeInfo(false);
         }
-        else if (mapOn)
+        else if (MapOn)
         {
             arrows.gameObject.SetActive(true);
             map.gameObject.SetActive(false);
             mapOn = false;
+
         }
     }
 
 
-    public void ChangeInfo()
+    public void ChangeInfo(bool on)
     {
 
-        if (!infoOn&& currentLocation.InfoSprite!=null)
+        if (on && currentLocation.InfoSprite!=null)
         {
             arrows.gameObject.SetActive(false);
             infoGO.SetActive(true);
@@ -235,12 +258,17 @@ public class MainController : MonoBehaviour
            var image= info.GetComponent<Image>();
            image.sprite = currentLocation.InfoSprite;
         }
-        else if (infoOn)
+        else if (!on)
         {
             arrows.gameObject.SetActive(true);
             infoGO.SetActive(false);
             infoOn = false;
         }
+    }
+
+    public void TurnInfoOff()
+    {
+        ChangeInfo(false);
     }
 
 

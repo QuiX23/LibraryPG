@@ -14,7 +14,10 @@ public class ChangeStateOfButtons : MonoBehaviour
 	}
     void Update ()
     {
-        text.enabled = isOver;
+        if (text.text != MainController.GetInstance().currentLocation.name)
+        {
+            text.enabled = isOver;
+        }
     }
 
     public void OnPointerEnterZ()
