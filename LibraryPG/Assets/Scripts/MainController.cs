@@ -65,7 +65,10 @@ public class MainController : MonoBehaviour
             cb.normalColor = Color.white;
             var pGO = placemarks[currentLocation.name];
             pGO.colors = cb;
-            pGO.GetComponentInChildren<ChangeStateOfButtons>().OnPointerExitZ();
+            ChangeView();
+            var pGOButton = pGO.GetComponentInChildren<ChangeStateOfButtons>();
+            pGOButton.OnPointerExitZ();
+            ChangeView();
         }
         if (location.InfoSprite != null)
         {
