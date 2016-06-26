@@ -25,6 +25,8 @@ public class MainController : MonoBehaviour
 
     public GameObject locationsObject;
 
+    public GameObject Replacer;
+
     public GameObject arrowPrefab;
     public GameObject placemarkPrefab;
 
@@ -35,6 +37,8 @@ public class MainController : MonoBehaviour
     public RectTransform arrows;
     public RectTransform map;
     public RectTransform info;
+    public RectTransform replaceImg;
+
 
     private bool mapOn=false;
     private bool infoOn = false;
@@ -59,6 +63,7 @@ public class MainController : MonoBehaviour
 
     public void ChangeLocation(Location location)
     {
+        SetReplacer(false);
         if (currentLocation.InfoSprite != null)
         {
             ColorBlock cb = placemarks[currentLocation.name].colors;
@@ -82,8 +87,15 @@ public class MainController : MonoBehaviour
         RenderSettings.skybox = currentLocation.skybox;
         SetNeighbours(location);
 
-        if (MapOn)ChangeView();
+        if (MapOn) ChangeView();
         ChangeInfo(true);
+
+        if (currentLocation.skybox.shader.name != "Skzybox/6 Sided")
+        {
+            var image = replaceImg.GetComponent<Image>();
+            image.sprite = currentLocation.Replacer;
+            SetReplacer(true);
+        }
     }
 
     public void Start()
@@ -267,6 +279,11 @@ public class MainController : MonoBehaviour
             infoGO.SetActive(false);
             infoOn = false;
         }
+    }
+
+    public void SetReplacer(bool on)
+    {
+        Replacer.SetActive(on);
     }
 
     public void TurnInfoOff()
