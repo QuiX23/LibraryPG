@@ -90,7 +90,7 @@ public class MainController : MonoBehaviour
         if (MapOn) ChangeView();
         ChangeInfo(true);
 
-        if (currentLocation.skybox.shader.name != "Skzybox/6 Sided")
+        if (currentLocation.skybox.shader.name != "Skybox/6 Sided")
         {
             var image = replaceImg.GetComponent<Image>();
             image.sprite = currentLocation.Replacer;
