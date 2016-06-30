@@ -14,6 +14,7 @@ public class Location : MonoBehaviour
     public Material skybox;
     public Sprite InfoSprite;
     public Sprite Replacer;
+    public bool Is2D;
 
 }
 
@@ -22,6 +23,14 @@ public class Neighbour
 {
     public Location location;
     public float direction;
+    public AlternativeArrow altArrow;
+}
 
-    
+
+[System.Serializable]
+public class AlternativeArrow
+{
+    public float x,y;
+    public float rotation;
+
 }

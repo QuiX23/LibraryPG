@@ -28,6 +28,7 @@ public class MainController : MonoBehaviour
     public GameObject Replacer;
 
     public GameObject arrowPrefab;
+    public GameObject altArrowPrefab;
     public GameObject placemarkPrefab;
 
     public Dictionary <string ,Button> placemarks;
@@ -35,6 +36,7 @@ public class MainController : MonoBehaviour
     public GameObject infoGO;
 
     public RectTransform arrows;
+    public RectTransform altArrows;
     public RectTransform map;
     public RectTransform info;
     public RectTransform replaceImg;
@@ -84,18 +86,23 @@ public class MainController : MonoBehaviour
         }
 
         currentLocation = location;
-        RenderSettings.skybox = currentLocation.skybox;
-        SetNeighbours(location);
 
-        if (MapOn) ChangeView();
-        ChangeInfo(true);
-
-        if (currentLocation.skybox.shader.name != "Skybox/6 Sided")
+        if (!currentLocation.Is2D)
+        {            
+            RenderSettings.skybox = currentLocation.skybox;
+            SetNeighbours(location);
+        }
+        else 
         {
             var image = replaceImg.GetComponent<Image>();
             image.sprite = currentLocation.Replacer;
             SetReplacer(true);
+            SetAltNeighbours(location);
         }
+
+
+        if (MapOn) ChangeView();
+        ChangeInfo(true);
     }
 
     public void Start()
@@ -160,7 +167,17 @@ public class MainController : MonoBehaviour
         if (arrows == null) return;
 
         DestroyNeighbours(location);
+        DestroyAltNeighbours(location);
         LoadNeighbours(location);
+    }
+
+    void SetAltNeighbours(Location location)
+    {
+        if (altArrows == null) return;
+
+        DestroyNeighbours(location);
+        DestroyAltNeighbours(location);
+        LoadAltNeighbours(location);
     }
 
     void DestroyNeighbours(Location location)
@@ -210,6 +227,59 @@ public class MainController : MonoBehaviour
 
             button.onClick.AddListener(delegate () { GoTo(temp); });
          
+        }
+    }
+
+    void DestroyAltNeighbours(Location location)
+    {
+        foreach (RectTransform arrow in altArrows)
+        {
+            Destroy(arrow.gameObject);
+        }
+    }
+
+    void LoadAltNeighbours(Location location)
+    {
+
+        foreach (Neighbour neighbour in location.neighbours)
+        {
+            var go = Instantiate(altArrowPrefab);
+            go.name = "Arrow_" + neighbour.location.name;
+
+            go.transform.parent = altArrows;
+
+            var arr=go.transform.GetChild(0);
+            arr.transform.transform.RotateAround(go.transform.position, Vector3.forward, neighbour.altArrow.rotation);
+
+            go.transform.localPosition = new Vector3((neighbour.altArrow.x - 0.5f) * replaceImg.rect.width,
+                                                    (neighbour.altArrow.y - 0.5f) * replaceImg.rect.height,
+                                                    0);
+
+            bool temp2 = false;
+            if (!altArrows.gameObject.activeSelf)
+            {
+                temp2 = true;
+                altArrows.gameObject.SetActive(true);
+            }
+
+            var button = go.GetComponentInChildren<Button>();
+
+            Location temp = neighbour.location;
+
+            altArrows.gameObject.SetActive(true);
+            var text = go.GetComponentInChildren<Text>();
+            if (text != null)
+                text.text = neighbour.location.name;
+
+
+            if (temp2)
+            {
+                arrows.gameObject.SetActive(false);
+            }
+
+
+            button.onClick.AddListener(delegate () { GoTo(temp); });
+
         }
     }
 
@@ -267,6 +337,7 @@ public class MainController : MonoBehaviour
         if (on && currentLocation.InfoSprite!=null)
         {
             arrows.gameObject.SetActive(false);
+            altArrows.gameObject.SetActive(false);
             infoGO.SetActive(true);
             infoOn = true;
 
@@ -276,6 +347,7 @@ public class MainController : MonoBehaviour
         else if (!on)
         {
             arrows.gameObject.SetActive(true);
+            altArrows.gameObject.SetActive(true);
             infoGO.SetActive(false);
             infoOn = false;
         }
